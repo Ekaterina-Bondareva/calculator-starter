@@ -29,7 +29,7 @@ const Calculator = () => {
     setResult(welcomeMessage);
   });
 
-  const handleCalculate = async (e) => {
+  const handleCalculate = (e) => {
     e.preventDefault();
     const query = {
       operation: operation,
@@ -37,14 +37,14 @@ const Calculator = () => {
       second: secondRef.current.value,
     };
 
-    try {
-      const res = axios.post(
-        `/api/calculate/${query.operation}/${query.first}/${query.second}`
-      );
-      setResult(res.data.result);
-    } catch (err) {
-      console.log(err);
-    }
+    axios
+      .post(`/api/calculate/${query.operation}/${query.first}/${query.second}`)
+      .then((res) => {
+        setResult(res.data.answer);
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+      });
   };
 
   const handleReset = (e) => {
@@ -128,6 +128,8 @@ const Calculator = () => {
   );
 };
 export default Calculator;
+
+
 
 
 
