@@ -12,17 +12,22 @@ import {
 import { OutlinedInput } from "@mui/material";
 import axios from "axios";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const Calculator = () => {
   const [operation, setOperation] = useState("");
   const [result, setResult] = useState("");
   const firstRef = useRef(null);
   const secondRef = useRef(null);
+  const welcomeMessage = "Calculator is ready!";
 
   const handleChange = (e) => {
     setOperation(e.target.value);
   };
+
+  useEffect(() => {
+    setResult(welcomeMessage);
+  }, []);
 
   const handleCalculate = (e) => {
     e.preventDefault();
@@ -38,16 +43,17 @@ const Calculator = () => {
         setResult(res.data.result);
       })
       .catch((err) => {
-        setResult(err.response.data.message);
+        console.log(err.response.data.message);
       });
   };
 
   const handleReset = (e) => {
     e.preventDefault();
     setOperation("");
-    setResult("");
+    setResult(welcomeMessage);
     firstRef.current.value = null;
     secondRef.current.value = null;
+    document.activeElement.blur();
   };
 
   return (
