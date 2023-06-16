@@ -3,9 +3,8 @@ import { add, subtract, multiply, divide } from "../../../utils/calculate";
 export default function handler(req, res) {
   try {
     if (req.method !== "GET") {
-      throw new Error(
-        `Unsupported method ${req.method}. Only GET method is supported`
-      );
+      res.status(405).json({ message: `Unsupported method ${req.method}` });
+      return;
     }
 
     const params = extractParams(req.query.params);
@@ -50,4 +49,11 @@ function extractParams(queryParams) {
     throw new Error(`Failed to process query params. Received: ${queryParams}`);
   }
 }
+
+
+
+
+
+
+
 

@@ -27,9 +27,9 @@ const Calculator = () => {
 
   useEffect(() => {
     setResult(welcomeMessage);
-  }, []);
+  });
 
-  const handleCalculate = (e) => {
+  const handleCalculate = async (e) => {
     e.preventDefault();
     const query = {
       operation: operation,
@@ -37,14 +37,14 @@ const Calculator = () => {
       second: secondRef.current.value,
     };
 
-    axios
-      .get(`/api/calculate/${query.operation}/${query.first}/${query.second}`)
-      .then((res) => {
-        setResult(res.data.result);
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-      });
+    try {
+      const res = axios.post(
+        `/api/calculate/${query.operation}/${query.first}/${query.second}`
+      );
+      setResult(res.data.result);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleReset = (e) => {
@@ -53,7 +53,6 @@ const Calculator = () => {
     setResult(welcomeMessage);
     firstRef.current.value = null;
     secondRef.current.value = null;
-    document.activeElement.blur();
   };
 
   return (
@@ -129,6 +128,26 @@ const Calculator = () => {
   );
 };
 export default Calculator;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
