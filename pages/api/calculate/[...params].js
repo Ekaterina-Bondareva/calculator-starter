@@ -1,4 +1,4 @@
-import { add, multiply, divide } from "../../../utils/calculate";
+import { add, subtract, multiply, divide } from "../../../utils/calculate"; //fix bug#4 - import subtract
 
 export default function handler(req, res) {
   try {
@@ -17,7 +17,7 @@ export default function handler(req, res) {
       case "subtract":
         result = subtract(params.first, params.second);
         break;
-      case "Multiply":
+      case "multiply": // fix bug#3 - M -> m
         result = multiply(params.first, params.second);
         break;
       case "divide":
@@ -42,8 +42,8 @@ function extractParams(queryParams) {
   try {
     const params = {
       operation: queryParams[0],
-      first: queryParams[1],
-      second: queryParams[2],
+      first: Number(queryParams[1]), //fix bug#1 - convert string to number
+      second: Number(queryParams[2]), //fix bug#1 - convert string to number
     };
     return params;
   } catch (e) {

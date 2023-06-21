@@ -107,7 +107,7 @@ const Calculator = () => {
         </Grid2>
         <Grid2 xs={2}>
           <FormControl fullWidth>
-            <Button variant="outlines" onChange={handleReset}>
+            <Button variant="outlines" onClick={handleReset}>  {/* fix bug#5 - onChange -> onClick */}
               Reset
             </Button>
           </FormControl>
