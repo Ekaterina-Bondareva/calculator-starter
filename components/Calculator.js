@@ -16,6 +16,7 @@ import { useState, useRef, useEffect } from "react";
 
 const Calculator = () => {
   const [operation, setOperation] = useState("");
+  const [cache, setCache] = useState("");
   const [result, setResult] = useState("");
   const firstRef = useRef(null);
   const secondRef = useRef(null);
@@ -40,7 +41,7 @@ const Calculator = () => {
     axios
       .get(`/api/calculate/${query.operation}/${query.first}/${query.second}`)
       .then((res) => {
-        setResult(res.data.result);
+        processResponse(res);
       })
       .catch((err) => {
         console.log(err.response.data.message);
@@ -55,6 +56,16 @@ const Calculator = () => {
     secondRef.current.value = null;
     document.activeElement.blur();
   };
+
+  const processResponse = (e) => {
+    let prevCache = cache;
+    setCache(e.data.result)
+    if (!prevCache) {
+      setResult(e.data.result);
+    } else {
+      setResult(prevCache);
+    }
+  }
 
   return (
     <form id="calculator-form" onSubmit={handleCalculate}>

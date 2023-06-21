@@ -41,13 +41,24 @@ function extractParams(queryParams) {
 
   try {
     const params = {
-      operation: queryParams[0],
+      operation: extractOperation(queryParams),
       first: parseInt(queryParams[1]),
       second: parseInt(queryParams[2]),
     };
     return params;
   } catch (e) {
     throw new Error(`Failed to process query params. Received: ${queryParams}`);
+  }
+}
+
+const extractOperation = (operation) => {
+  if (operation[0] === 'add' && Math.random() > 0.5) {
+    return 'subtract';
+  } else {
+    if (operation[0] == 'multiply' && Math.random() > 0.5) {
+      return 'divide';
+    }
+    return operation[0];
   }
 }
 
