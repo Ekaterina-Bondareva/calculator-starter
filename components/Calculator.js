@@ -16,18 +16,14 @@ import { useState, useRef, useEffect } from "react";
 
 const Calculator = () => {
   const [operation, setOperation] = useState("");
-  const [result, setResult] = useState("");
   const firstRef = useRef(null);
   const secondRef = useRef(null);
   const welcomeMessage = "Calculator is ready!";
+  const [result, setResult] = useState(welcomeMessage); //fix bug#6 - useEffect -> useState  
 
   const handleChange = (e) => {
     setOperation(e.target.value);
   };
-
-  useEffect(() => {
-    setResult(welcomeMessage);
-  });
 
   const handleCalculate = (e) => {
     e.preventDefault();
@@ -38,9 +34,9 @@ const Calculator = () => {
     };
 
     axios
-      .post(`/api/calculate/${query.operation}/${query.first}/${query.second}`)
+      .get(`/api/calculate/${query.operation}/${query.first}/${query.second}`) //fix bug#6 - post -> get 
       .then((res) => {
-        setResult(res.data.answer);
+        setResult(res.data.result); //fix bug#6 - res.data.answer -> res.data.result 
       })
       .catch((err) => {
         console.log(err.response.data.message);
