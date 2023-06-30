@@ -1,4 +1,4 @@
-import { Axios } from "axios";
+import { NextApiResponse, NextApiRequest } from 'next'
 import { add, subtract, multiply, divide } from "../../../utils/calculate";
 
 interface Params {
@@ -7,7 +7,7 @@ interface Params {
   second: number;
 }
 
-export default function handler(req, res) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method !== "GET") {
       throw new Error(
@@ -39,7 +39,7 @@ export default function handler(req, res) {
   }
 }
 
-function extractParams(queryParams: string[]): Params {
+function extractParams(queryParams: string[] | string): Params {
   if (queryParams.length !== 3) {
     throw new Error(
       `Query params should have 3 items. Received ${queryParams.length}: ${queryParams}`
