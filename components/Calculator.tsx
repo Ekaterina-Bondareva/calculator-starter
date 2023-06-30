@@ -8,6 +8,7 @@ import {
   Button,
   Divider,
   Typography,
+  InputBaseComponentProps,
 } from "@mui/material";
 import { OutlinedInput } from "@mui/material";
 import axios from "axios";
@@ -17,11 +18,11 @@ import { useState, useRef, useEffect } from "react";
 const Calculator = () => {
   const [operation, setOperation] = useState("");
   const [result, setResult] = useState("");
-  const firstRef = useRef(null);
-  const secondRef = useRef(null);
+  const firstRef = useRef<InputBaseComponentProps>(null);
+  const secondRef = useRef<InputBaseComponentProps>(null);
   const welcomeMessage = "Calculator is ready!";
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setOperation(e.target.value);
   };
 
@@ -29,12 +30,20 @@ const Calculator = () => {
     setResult(welcomeMessage);
   }, []);
 
-  const handleCalculate = (e) => {
+  const handleCalculate = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    let firstRefCurrentValue = "";
+    let secondRefCurrentValue = "";
+    if (firstRef.current) {
+      firstRefCurrentValue = firstRef.current.value;
+    }
+    if (secondRef.current) {
+      secondRefCurrentValue = secondRef.current.value;
+    }
     const query = {
       operation: operation,
-      first: firstRef.current.value,
-      second: secondRef.current.value,
+      first: firstRefCurrentValue,
+      second: secondRefCurrentValue,
     };
 
     axios
@@ -47,13 +56,23 @@ const Calculator = () => {
       });
   };
 
-  const handleReset = (e) => {
+  const handleReset = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
     setOperation("");
     setResult(welcomeMessage);
-    firstRef.current.value = null;
-    secondRef.current.value = null;
-    document.querySelector("#operation").selectedIndex = 0;
+    if (firstRef.current) {
+      firstRef.current.value = null;
+    }
+    if (secondRef.current) {
+      secondRef.current.value = null;
+    }
+    let obj: HTMLSelectElement | null = null;
+    if (document && document.querySelector("#operation")) {   
+      obj = document.querySelector("#operation");
+      if (obj) {
+        obj.selectedIndex = 0;
+      }
+    } 
   };
 
   return (
@@ -107,7 +126,7 @@ const Calculator = () => {
         </Grid2>
         <Grid2 xs={2}>
           <FormControl fullWidth>
-            <Button variant="outlines" onClick={handleReset}>
+            <Button variant="outlined" onClick={handleReset}>
               Reset
             </Button>
           </FormControl>
