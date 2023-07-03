@@ -1,10 +1,15 @@
 import { NextApiResponse, NextApiRequest } from 'next'
 import { add, subtract, multiply, divide } from "../../../utils/calculate";
+import { Operation } from "../../../utils/calculate";
 
 interface Params {
   operation: string;
   first: number;
   second: number;
+}
+
+function isOperation(op: string): op is Operation {
+  return Object.values(Operation).includes(op as Operation);
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -16,26 +21,29 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const params = extractParams(req.query.params);
-    let result: number;
-    switch (params.operation) {
-      case "add":
-        result = add(params.first, params.second);
-        break;
-      case "subtract":
-        result = subtract(params.first, params.second);
-        break;
-      case "multiply":
-        result = multiply(params.first, params.second);
-        break;
-      case "divide":
-        result = divide(params.first, params.second);
-        break;
-      default:
-        throw new Error(`Unsupported operation ${params.operation}`);
+    if (isOperation(params.operation)) {
+      let result = calculate(params.operation, params.first, params.second);
+      res.status(200).json({ result });
+    } else {
+      throw new Error(`Invalid operation: ${params.operation}`);
     }
-    res.status(200).json({ result });
   } catch (e) {
     res.status(500).json({ message: e.message });
+  }
+}
+
+function calculate(operation: Operation, first: number, second: number): number {
+  switch (operation) {
+    case Operation.Add:
+      return add(first, second);
+    case Operation.Subtract:
+      return subtract(first, second);
+    case Operation.Multiply:
+      return multiply(first, second);
+    case Operation.Divide:
+      return divide(first, second);
+    default:
+      throw new Error(`Unsupported operation ${operation}`);
   }
 }
 
