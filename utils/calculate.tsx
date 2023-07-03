@@ -1,3 +1,10 @@
+export enum Operation {
+  Add = 'add',
+  Subtract = 'subtract',
+  Multiply = 'multiply',
+  Divide = 'divide'
+}
+
 export const add = (first: number, second: number): number => {
   return first + second;
 };

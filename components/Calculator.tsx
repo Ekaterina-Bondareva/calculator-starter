@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { OutlinedInput } from "@mui/material";
 import axios from "axios";
+import { Operation } from "../utils/calculate";
 
 import { useState, useRef, useEffect } from "react";
 
@@ -21,6 +22,13 @@ const Calculator = () => {
   const firstRef = useRef<InputBaseComponentProps>(null);
   const secondRef = useRef<InputBaseComponentProps>(null);
   const welcomeMessage = "Calculator is ready!";
+
+  const Operations = {
+    [Operation.Add]: "+",
+    [Operation.Subtract]: "-",
+    [Operation.Multiply]: "*",
+    [Operation.Divide]: "/"
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setOperation(e.target.value);
@@ -66,13 +74,6 @@ const Calculator = () => {
     if (secondRef.current) {
       secondRef.current.value = null;
     }
-    let obj: HTMLSelectElement | null = null;
-    if (document && document.querySelector("#operation")) {   
-      obj = document.querySelector("#operation");
-      if (obj) {
-        obj.selectedIndex = 0;
-      }
-    } 
   };
 
   return (
@@ -98,12 +99,16 @@ const Calculator = () => {
                 id: "operation",
               }}
               onChange={handleChange}
+              value={operation}
             >
               <option value="">Op</option>
-              <option value={"add"}>+</option>
-              <option value={"subtract"}>-</option>
-              <option value={"multiply"}>*</option>
-              <option value={"divide"}>/</option>
+              {
+                Object.keys(Operations).map((key : Operation) => 
+                  <option key={key}
+                    value= {key}
+                  >{Operations[key]}</option>
+                )
+              } 
             </NativeSelect>
           </FormControl>
         </Grid2>
